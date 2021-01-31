@@ -1,1 +1,1 @@
-# dataops-sdk-plugins
+# DataOps-sdk-plugins
