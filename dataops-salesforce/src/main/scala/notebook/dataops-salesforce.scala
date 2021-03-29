@@ -49,7 +49,7 @@ def ingestDf(): DataFrame = {
     "37.0"
   )
 
-
+  
 
   session.log("Connected to Salesforce API", "I")
 

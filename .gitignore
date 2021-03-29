@@ -1,1 +1,4 @@
 /dataops-salesforce/.idea/
+
+/dataops-salesforce/project/target/
+/dataops-salesforce/project/lib/
