@@ -1,4 +1,21 @@
-# **DataOps Salesforce Plugin**
+# **DataOps Plugins**
+
+### **Setting up your intelliJ Dev Env**
+The below instructions are for setting up a development environment in intellij for a better development experience
+
+1. Get Required Software
+    * IntelliJ
+    * GitKraken
+    * Amazon Corretto
+   
+2. Set up github account with WMP email (if you have not yet)
+3. Open GitKraken and clone the [sdk repo](https://github.com/intellio/dataops-sdk-plugins) 
+4. Open IntelliJ and open the repository that you just pulled. After opening - go to plugins and add the plugin for sbt
+5. Go to file->project structure to ensure that the SDK is corretto
+6. Reference these files as you build out your notebook
+   
+
+### **DataOps Salesforce Plugin**
 This code allows users to extract data from Salesforce using the DataOps Custom Ingest SDK and the [spark-salesforce](https://github.com/springml/spark-salesforce) library.
 
 It also includes a build.sbt file for opening and editing in IntelliJ. You can clone this repository, then open the dataops-salesforce folder in IntelliJ using [this guide](https://www.jetbrains.com/help/idea/sbt-support.html) to import the sbt project and allow for easy editing/modification if needed.
@@ -52,3 +69,28 @@ For those who just want to use this as-is, here are the setup steps:
 7. Pull now and debug any issues
 
 Please contact your project team for managed service support provider for any issues or assistance debugging the setup or ongoing execution of this custom ingestion codebase
+
+### **DataOps Excel Plugin**
+This code allows you to customize a dataframe from an excel spreadsheet. This enables you to pull out different information
+from different sheets and ignore inimportant miscellaneous cells.
+
+Steps
+1. Copy the code in dataops-excel.scala into a databricks notebook
+2. Ensure you have the following libraries
+    * https://github.com/crealytics/spark-excel (can be installed with Maven)
+    * intellio dataops sdk (will be at the toplevel of the datalake location)
+   
+3. Configure parameters in the source settings for getting excel data
+
+`
+{   
+    "FileLocation":"s3://sandbox-datalake-wmp/reid-test/test-excel.xlsx",
+    "SheetName":"Sheet1",
+    "Data-Rows":"A6:XFD1048576", 
+    "Data-HasHeaders":"true", 
+    "Metadata-Rows": "A1:B2,E1:F1,asdf", //This is dynamic and can also be set to "" is theres no further metadata
+    "Metadata-ShouldTranspose":"false" 
+}
+`
+4. When setting up the ingestionSession, follow these directions and then connect it  https://intellio.gitbook.io/dataops/configuring-the-data-integration-process/custom-ingestion
+
