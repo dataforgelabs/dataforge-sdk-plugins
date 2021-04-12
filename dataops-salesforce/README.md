@@ -75,12 +75,13 @@ This code allows you to customize a dataframe from an excel spreadsheet. This en
 from different sheets and ignore inimportant miscellaneous cells.
 
 Steps
-1. Copy the code in dataops-excel.scala into a databricks notebook
-2. Ensure you have the following libraries
+1. Set up [Custom Ingestion](https://intellio.gitbook.io/dataops/configuring-the-data-integration-process/custom-ingestion) and connect the sessionIngestion to your source
+2. Copy the code in dataops-excel.scala into a databricks notebook
+3. Ensure you have the following libraries
     * https://github.com/crealytics/spark-excel (can be installed with Maven)
     * intellio dataops sdk (will be at the toplevel of the datalake location)
    
-3. Configure parameters in the source settings for getting excel data
+4. Configure parameters in the source settings for getting excel data
 
 `
 {   
@@ -92,5 +93,11 @@ Steps
     "Metadata-ShouldTranspose":"false" 
 }
 `
-4. When setting up the ingestionSession, follow these directions and then connect it  https://intellio.gitbook.io/dataops/configuring-the-data-integration-process/custom-ingestion
-
+NOTES 
+-----
+* All data has to come from a single sheet
+* All metadata either has to be transposed, or not transposed
+* All metadata must be have a length of 2 cells
+* Merged cells read it in the value as the top left most cell - For Example - If B1 & C1 are merged its read into the B1 cell
+* Hidden cells still get read in
+* Whatever is shown to the user is what is written to the dataframe, including formatting
