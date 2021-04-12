@@ -8,19 +8,20 @@ val spark = SparkSession.builder().getOrCreate()
 val session = new IngestionSession("Sandbox","CustomExcelIngestion")
 
 // Substantiate custom parameters - all will error if they havent been passed in - error codes needed
-val fileLocation = (session.customParameters \ "FileLocation").asOpt[String].get
+val fileLocation = (session.customParameters \ "FileLocation").asOpt[String].get 
 val dataRows = (session.customParameters \ "Data-Rows").asOpt[String].get
 val dataHasHeaders = (session.customParameters \ "Data-HasHeaders").asOpt[String].get
 val sheetName = (session.customParameters \ "SheetName").asOpt[String].get
-val metadataRows = (session.customParameters \ "Metadata-Rows").asOpt[String].get
-val shouldTranspose = (session.customParameters \ "Metadata-ShouldTranspose").asOpt[String].get
+val metadataRows = (session.customParameters \ "Metadata-Rows").asOpt[String].get 
+val shouldTranspose = (session.customParameters \ "Metadata-ShouldTranspose").asOpt[String].get 
+val shouldArchive = (session.customParameters \ "ShouldArchive").asOpt[String].get 
 
 // Ingest the Excel Sheet
 def ingestDf(): DataFrame = {
   //Start the Session
   session.log("Starting Ingestion")
-
-  // Read in the Tabular Data
+  
+  // Read in the Tabular Data 
   val df = spark.read
     .format("com.crealytics.spark.excel")
     .option("header", dataHasHeaders)
@@ -28,14 +29,30 @@ def ingestDf(): DataFrame = {
     .load(fileLocation)
 
   //Get the FileName and add the file metadata
-  //val fileLocLastElem = fileLocation.split("/").size - 1
   val fileName = fileLocation.split("/")(fileLocation.split("/").size - 1)
   val dfWithMeta = df.withColumn("FileName", lit(fileName)).withColumn("FileName&Sheet", lit(fileName + "/" + sheetName))
-
-  return metadataRows match {
+  
+  val returnedDataSet =  metadataRows match {
     case "" => dfWithMeta
     case _: (String) => HandleMetaData(dfWithMeta, fileName)
   }
+  
+  //Write out to archive
+  if (shouldArchive.toBoolean){
+    returnedDataSet.write
+      .format("com.crealytics.spark.excel")
+      .option("header", dataHasHeaders)
+      .option("dataAddress", "'" + sheetName + "'!" + dataRows)
+      .save(constructExport(fileLocation.split("/"),fileName))
+  }
+  return returnedDataSet
+}
+
+def constructExport(fileLocation: Array[String], fileName: String): String = {
+  fileLocation.head match {
+    case `fileName` => "archive/" + fileName.split("\\.")(0) + "_" + sheetName + "_" + java.time.LocalDate.now + "_" + java.time.LocalTime.now + "." + fileName.split("\\.")(1)
+    case _ => fileLocation.head + "/" + constructExport(fileLocation.tail, fileName)
+  } 
 }
 
 def HandleMetaData(dfWithMeta: DataFrame, fileName: String): DataFrame = {
