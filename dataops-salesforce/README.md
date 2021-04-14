@@ -84,14 +84,15 @@ Steps
 4. Configure parameters in the source settings for getting excel data
 
 `
-{   
-    "FileLocation":"s3://sandbox-datalake-wmp/reid-test/test-excel.xlsx",
+{
+    "Data-Rows":"A1:Z99",
+    "Data-HasHeaders":"true",
     "SheetName":"Sheet1",
-    "Data-Rows":"A6:XFD1048576", 
-    "Data-HasHeaders":"true", 
-    "Metadata-Rows": "A1:B2,E1:F1,asdf", //This is dynamic and can also be set to "" is theres no further metadata
-    "Metadata-ShouldTranspose":"false" 
-}
+    "FileLocation":"file_location.xlsx",
+    "Metadata-Rows":"B1:C2", //leave empty if nothing
+    "Metadata-ShouldTranspose":"true" ,
+    "ShouldArchive":"true"
+    }
 `
 NOTES 
 -----
