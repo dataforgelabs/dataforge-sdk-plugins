@@ -92,7 +92,7 @@ Steps
     "Metadata-Rows":"B1:C2", //leave empty if nothing
     "Metadata-ShouldTranspose":"true" ,
     "ShouldArchive":"true"
-    }
+}
 `
 NOTES 
 -----
