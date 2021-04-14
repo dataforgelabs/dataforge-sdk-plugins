@@ -7,14 +7,22 @@ import org.apache.spark.sql.functions._
 val spark = SparkSession.builder().getOrCreate()
 val session = new IngestionSession("Sandbox","CustomExcelIngestion")
 
-// Substantiate custom parameters - all will error if they havent been passed in - error codes needed
-val fileLocation = (session.customParameters \ "FileLocation").asOpt[String].get 
-val dataRows = (session.customParameters \ "Data-Rows").asOpt[String].get
-val dataHasHeaders = (session.customParameters \ "Data-HasHeaders").asOpt[String].get
-val sheetName = (session.customParameters \ "SheetName").asOpt[String].get
-val metadataRows = (session.customParameters \ "Metadata-Rows").asOpt[String].get 
-val shouldTranspose = (session.customParameters \ "Metadata-ShouldTranspose").asOpt[String].get 
-val shouldArchive = (session.customParameters \ "ShouldArchive").asOpt[String].get 
+// Substantiate custom parameters
+val fileLocation = getParameter("FileLocation")
+val shouldTranspose = getParameter("Metadata-ShouldTranspose")
+val dataRows = getParameter("Data-Rows")
+val dataHasHeaders = getParameter("Data-HasHeaders")
+val sheetName = getParameter("SheetName")
+val metadataRows = getParameter("Metadata-Rows")
+val shouldArchive = getParameter("ShouldArchive") 
+
+def getParameter(paramName: String) : String = {
+  val incomingParam = (session.customParameters \ paramName).asOpt[String]
+  if(incomingParam == None){
+    session.log("Parameter not substantiated: " + paramName)
+  }
+  incomingParam.get
+}
 
 // Ingest the Excel Sheet
 def ingestDf(): DataFrame = {
@@ -48,6 +56,7 @@ def ingestDf(): DataFrame = {
   return returnedDataSet
 }
 
+//Export file to archive folder with timestamp
 def constructExport(fileLocation: Array[String], fileName: String): String = {
   fileLocation.head match {
     case `fileName` => "archive/" + fileName.split("\\.")(0) + "_" + sheetName + "_" + java.time.LocalDate.now + "_" + java.time.LocalTime.now + "." + fileName.split("\\.")(1)
@@ -55,7 +64,9 @@ def constructExport(fileLocation: Array[String], fileName: String): String = {
   } 
 }
 
+//Handle the metadata
 def HandleMetaData(dfWithMeta: DataFrame, fileName: String): DataFrame = {
+  
   val metadataSelections = metadataRows.split(",")
   val metadataDFFirst = getMetaData(metadataSelections(0), fileName, "1")
   metadataSelections.drop(1)
@@ -68,16 +79,19 @@ def HandleMetaData(dfWithMeta: DataFrame, fileName: String): DataFrame = {
   return AddMetaColumns(dfWithMeta, MetaData.columns.toList.size - 1, MetaData)
 }
 
+//add the columns to the dataframe
 def AddMetaColumns(allData: DataFrame, count: Int, MetaData: DataFrame): DataFrame = {
   if(count == - 1) allData
   else AddMetaColumns(allData.withColumn(MetaData.columns.toList(count), lit(MetaData.select(MetaData.columns.toList(count)).collect()(0)(0))), count-1, MetaData)
 }
 
+//Join the dataframes
 def JoinThem(dfs: Array[DataFrame], allData: DataFrame, currDF: Int) : DataFrame = {
   if(currDF == 0) allData
   else JoinThem(dfs , allData.join(dfs(currDF), allData("FileName1") === dfs(currDF)("FileName"), "inner"), currDF - 1)
 }
 
+//Get the meta data and pivot it if needed
 def getMetaData(rows: String, fileName: String, added_ending:String = ""): DataFrame = {
   val metadataDF = spark.read
     .format("com.crealytics.spark.excel")
