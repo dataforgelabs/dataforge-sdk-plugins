@@ -82,23 +82,25 @@ Steps
     * intellio dataops sdk (will be at the toplevel of the datalake location)
    
 4. Configure parameters in the source settings for getting excel data
+5. Run the ingestion
+6. Verify
 
-`
 {
-    "Data-Rows":"A1:Z99",
-    "Data-HasHeaders":"true",
-    "SheetName":"Sheet1",
-    "FileLocation":"file_location.xlsx",
-    "Metadata-Rows":"B1:C2", //leave empty if nothing
-    "Metadata-ShouldTranspose":"true" ,
-    "ShouldArchive":"true"
+"DataRows":"A4", //select up the top left cell that your tabular data works with  (REQUIRED)
+"SheetName":"Sheet1", // sheetname (REQUIRED)
+"FileLocation":"s3://test-file.xlsx", // file location (REQUIRED)
+"ShouldArchive":"true" // if you would like your file to be archived once it has been ingested (DEFAULT = FALSE)
+"HeaderRows": // (OPTIONAL)
+    [
+        {"key_reference":"A1","value":"B1"}, //Use key_reference when using a cell on the sheet as the header
+        {"key_custom":"customerName","value":"E1"} //use key custom when giving the header a custom input
+    ]
 }
-`
-NOTES 
------
-* All data has to come from a single sheet
-* All metadata either has to be transposed, or not transposed
-* All metadata must be have a length of 2 cells
-* Merged cells read it in the value as the top left most cell - For Example - If B1 & C1 are merged its read into the B1 cell
-* Hidden cells still get read in
-* Whatever is shown to the user is what is written to the dataframe, including formatting
+
+Assumptions and Notes
+1. Each source can only load from one sheet
+2. The DataRows Column selected is the top left of the tabular data and it will ingest any data below that
+3. Archive archives file with a timestamp in an 'archive' folder in the same directory
+4. Hidden Cells are still read in
+5. Whatever is shown to the user is what is copied to the dataframe, all formatting included
+6. Merged data - it reads the upper left hand cell 
