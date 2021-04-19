@@ -1,21 +1,4 @@
-# **DataOps Plugins**
-
-### **Setting up your intelliJ Dev Env**
-The below instructions are for setting up a development environment in intellij for a better development experience
-
-1. Get Required Software
-    * IntelliJ
-    * GitKraken
-    * Amazon Corretto
-   
-2. Set up github account with WMP email (if you have not yet)
-3. Open GitKraken and clone the [sdk repo](https://github.com/intellio/dataops-sdk-plugins) 
-4. Open IntelliJ and open the repository that you just pulled. After opening - go to plugins and add the plugin for sbt
-5. Go to file->project structure to ensure that the SDK is corretto
-6. Reference these files as you build out your notebook
-   
-
-### **DataOps Salesforce Plugin**
+# **DataOps Salesforce Plugin**
 This code allows users to extract data from Salesforce using the DataOps Custom Ingest SDK and the [spark-salesforce](https://github.com/springml/spark-salesforce) library.
 
 It also includes a build.sbt file for opening and editing in IntelliJ. You can clone this repository, then open the dataops-salesforce folder in IntelliJ using [this guide](https://www.jetbrains.com/help/idea/sbt-support.html) to import the sbt project and allow for easy editing/modification if needed.
@@ -69,38 +52,3 @@ For those who just want to use this as-is, here are the setup steps:
 7. Pull now and debug any issues
 
 Please contact your project team for managed service support provider for any issues or assistance debugging the setup or ongoing execution of this custom ingestion codebase
-
-### **DataOps Excel Plugin**
-This code allows you to customize a dataframe from an excel spreadsheet. This enables you to pull out different information
-from different sheets and ignore inimportant miscellaneous cells.
-
-Steps
-1. Set up [Custom Ingestion](https://intellio.gitbook.io/dataops/configuring-the-data-integration-process/custom-ingestion) and connect the sessionIngestion to your source
-2. Copy the code in dataops-excel.scala into a databricks notebook
-3. Ensure you have the following libraries
-    * https://github.com/crealytics/spark-excel (can be installed with Maven)
-    * intellio dataops sdk (will be at the toplevel of the datalake location)
-   
-4. Configure parameters in the source settings for getting excel data
-5. Run the ingestion
-6. Verify
-
-{
-"DataRows":"A4", //select up the top left cell that your tabular data works with  (REQUIRED)
-"SheetName":"Sheet1", // sheetname (REQUIRED)
-"FileLocation":"s3://test-file.xlsx", // file location (REQUIRED)
-"ShouldArchive":"true" // if you would like your file to be archived once it has been ingested (DEFAULT = FALSE)
-"HeaderRows": // (OPTIONAL)
-    [
-        {"key_reference":"A1","value":"B1"}, //Use key_reference when using a cell on the sheet as the header
-        {"key_custom":"customerName","value":"E1"} //use key custom when giving the header a custom input
-    ]
-}
-
-Assumptions and Notes
-1. Each source can only load from one sheet
-2. The DataRows Column selected is the top left of the tabular data and it will ingest any data below that
-3. Archive archives file with a timestamp in an 'archive' folder in the same directory
-4. Hidden Cells are still read in
-5. Whatever is shown to the user is what is copied to the dataframe, all formatting included
-6. Merged data - it reads the upper left hand cell 
