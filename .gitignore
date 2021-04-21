@@ -1,4 +1,6 @@
 /dataops-salesforce/.idea/
-
 /dataops-salesforce/project/target/
 /dataops-salesforce/project/lib/
+/dataops-excel/.idea/
+/dataops-excel/project/target/
+/dataops-excel/project/lib/
