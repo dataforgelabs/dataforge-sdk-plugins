@@ -13,18 +13,21 @@ Steps
 5. Run the ingestion
 6. Verify
 
-{
-"DataRows":"A4", //select up the top left cell that your tabular data works with  (REQUIRED)
-"SheetName":"Sheet1", // sheetname (REQUIRED)
-"FileLocation":"s3://test-file.xlsx", // file location (REQUIRED)
-"ShouldArchive":"true" // if you would like your file to be archived once it has been ingested (DEFAULT = FALSE)
-"HeaderRows": // (OPTIONAL)
-    [
-        {"key_reference":"A1","value":"B1"}, //Use key_reference when using a cell on the sheet as the header
-        {"key_custom":"customerName","value":"E1"}, //use key custom when giving the header a custom input
-        ...
-    ]
-}
+```
+{  
+"DataRows":"A4", //select up the top left cell that your tabular data works with  (REQUIRED)  
+"SheetName":"Sheet1", // sheetname (REQUIRED)  
+"FileKey": "name", //key in the filename that shows that that file should be ingested (REQUIRED)
+"FolderName": "ingestableFiles", //The lowest level folder to ingest files from, if its at the bucket level, specify the bucket name (REQUIRED)  
+"ShouldArchive":"true" // if you would like your file to be archived once it has been ingested (DEFAULT = FALSE)  
+"HeaderRows": // (OPTIONAL)  
+  [  
+     {"key_reference":"A1","value":"B1"}, //Use key_reference when using a cell on the sheet as the header  
+     {"key_custom":"customerName","value":"E1"}, //use key custom when giving the header a custom input  
+     ...  
+  ]  
+}  
+```
 
 Assumptions and Notes
 1. Each source can only load from one sheet
