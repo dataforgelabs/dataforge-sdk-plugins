@@ -15,9 +15,9 @@ The below instructions are meant to show configuration for AWS Lambda functions 
 5. Enable Monitoring
 6. Code
     1. Libraries: Json, urllib.parse, boto3, requests
-    2. If you are running queries you will need to conigure the below
-       3. Create an [rds client](https://boto3.amazonaws.com/v1/documentation/api/latest/reference/services/rds-data.html)
-       4. Depending on wanted functionality, configure a sql string
-       5. Configure your [execute statement](https://boto3.amazonaws.com/v1/documentation/api/latest/reference/services/rds-data.html#RDSDataService.Client.execute_statement)
+    2. If you are running queries you will need to configure the below
+        1. Create an [rds client](https://boto3.amazonaws.com/v1/documentation/api/latest/reference/services/rds-data.html)
+        2. Depending on wanted functionality, configure a sql string
+        3. Configure your [execute statement](https://boto3.amazonaws.com/v1/documentation/api/latest/reference/services/rds-data.html#RDSDataService.Client.execute_statement)
 7. Hit any API's that are needed using the requests lib
 8. test / use cloudwatch to debug.
