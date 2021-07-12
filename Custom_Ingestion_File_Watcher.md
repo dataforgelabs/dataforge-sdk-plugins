@@ -1,4 +1,4 @@
-# Custom Ingestion File Watcher Architecture
+# Custom Ingestion Architecture
 
 The below instructions are meant to show configuration for AWS Lambda functions in order to create interactions between IDO / AWS.
 
