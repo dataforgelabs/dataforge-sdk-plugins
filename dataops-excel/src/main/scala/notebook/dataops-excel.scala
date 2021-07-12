@@ -160,7 +160,7 @@ def lookupCell(cell: String, fileLocation: String) : String = {
 
 def constructMove(fileLocation: Array[String], fileName: String): String = {
   fileLocation.head match {
-    case `fileName` => "archive/" + fileName.split("\\.")(0) + "_SupplierRaw_" + sheetName + "_" + java.time.LocalDate.now + "_" + java.time.LocalTime.now + "." + fileName.split("\\.")(1)
+    case `fileName` => "archive/" + fileName.split("\\.")(0) + "_Original_" + sheetName + "_" + java.time.LocalDate.now + "_" + java.time.LocalTime.now + "." + fileName.split("\\.")(1)
     case _ => fileLocation.head + "/" + constructMove(fileLocation.tail, fileName)
   } 
 }
