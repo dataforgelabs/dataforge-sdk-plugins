@@ -25,7 +25,7 @@ val sourceEnvironment = getStringParameter("SourceEnvironment")
 val headerDataRows = (session.customParameters \ "HeaderRows").asOpt[Vector[JsValue]]
 
 // Get all files in a list from the location
-val filesFound = dbutils.fs.ls(s"/mnt/{mounted location on databricks file system}/$folderPath").map((_.path)).toList.filter(x => x.contains(fileKey))
+val filesFound = dbutils.fs.ls(s"/mnt/{mounted location on databricks file system}$folderPath").map((_.path)).toList.filter(x => x.contains(fileKey))
 
 // Get the parameters that are strings coming in and default them or error
 def getStringParameter(paramName: String) : String = {
