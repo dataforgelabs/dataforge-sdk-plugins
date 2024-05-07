@@ -1,13 +1,13 @@
-# **DataOps Excel Plugin**
+# **DataForge Excel Plugin**
 This code allows you to customize a dataframe from an excel spreadsheet. This enables you to pull out different information
 from different sheets and ignore inimportant miscellaneous cells.
 
 Steps
-1. Set up [Custom Ingestion](https://intellio.gitbook.io/dataops/configuring-the-data-integration-process/custom-ingestion) and connect the sessionIngestion to your source
-2. Copy the code in dataops-excel.scala into a databricks notebook
+1. Set up custom ingestion and connect the sessionIngestion to your source
+2. Copy the code in dataforge-excel.scala into a databricks notebook
 3. Ensure you have the following libraries
     * https://github.com/crealytics/spark-excel (can be installed with Maven)
-    * intellio dataops sdk (will be at the toplevel of the datalake location)
+    * dataforge sdk
    
 4. Configure parameters in the source settings for getting excel data
 5. Run the ingestion
